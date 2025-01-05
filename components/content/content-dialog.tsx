@@ -9,6 +9,15 @@ import {
   ContentStatus 
 } from '@/lib/content-service'
 
+// Type guard functions
+function isValidContentType(value: string): value is ContentType {
+  return ['Article', 'Page', 'Email'].includes(value)
+}
+
+function isValidContentStatus(value: string): value is ContentStatus {
+  return ['Draft', 'Published'].includes(value)
+}
+
 interface ContentDialogProps {
   content?: Content
   isOpen: boolean
@@ -22,6 +31,8 @@ interface ApiError {
   code?: string;
   details?: Record<string, string[]>;
 }
+
+type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>
 
 export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -127,7 +138,12 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
                   required
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as ContentType })}
+                  onChange={(e: SelectChangeEvent) => {
+                    const newType = e.target.value
+                    if (isValidContentType(newType)) {
+                      setFormData({ ...formData, type: newType })
+                    }
+                  }}
                   disabled={isSubmitting}
                 >
                   <option value="Article">Article</option>
@@ -145,7 +161,12 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
                   required
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as ContentStatus })}
+                  onChange={(e: SelectChangeEvent) => {
+                    const newStatus = e.target.value
+                    if (isValidContentStatus(newStatus)) {
+                      setFormData({ ...formData, status: newStatus })
+                    }
+                  }}
                   disabled={isSubmitting}
                 >
                   <option value="Draft">Draft</option>
