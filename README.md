@@ -81,3 +81,26 @@ src/
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Environment Variables
+
+This project requires the following environment variables:
+
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### Setting Up Environment Variables
+
+1. Local Development:
+   - Copy `.env.example` to `.env.local`
+   - Fill in your Supabase credentials
+
+2. Vercel Deployment:
+   - Go to your Vercel project settings
+   - Add the environment variables in the "Environment Variables" section
+   - Redeploy your application
+
+You can find these values in your Supabase project settings under Project Settings > API.
