@@ -131,7 +131,7 @@ export default function HelpPage() {
               Need more help?
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Can't find what you're looking for? Our support team is here to help.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help.
             </p>
           </div>
           <div className="mt-8 lg:mt-0">

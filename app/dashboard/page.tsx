@@ -56,7 +56,7 @@ export default function DashboardPage() {
           Welcome to your dashboard
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          Let's get you started with the basics
+          Let&apos;s get you started with the basics
         </p>
       </div>
 

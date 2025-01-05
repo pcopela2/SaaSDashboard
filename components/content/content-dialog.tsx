@@ -1,13 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Content, CreateContentInput, contentService } from '@/lib/content-service'
+import { 
+  Content, 
+  CreateContentInput, 
+  contentService,
+  ContentType,
+  ContentStatus 
+} from '@/lib/content-service'
 
 interface ContentDialogProps {
   content?: Content
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+}
+
+// Define error type for API responses
+interface ApiError {
+  message: string;
+  code?: string;
+  details?: Record<string, string[]>;
 }
 
 export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDialogProps) {
@@ -41,12 +54,12 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
     }
   }, [isOpen, content])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      setIsSubmitting(true)
-      setError(null)
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setError(null)
 
+    try {
       if (content?.id) {
         console.log('Updating content:', { id: content.id, ...formData })
         await contentService.updateContent({
@@ -60,15 +73,10 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
 
       onSuccess()
       onClose()
-    } catch (error) {
-      console.error('Error saving content:', error)
-      if (error instanceof Error) {
-        setError(error.message)
-      } else if (typeof error === 'object' && error !== null) {
-        setError(JSON.stringify(error))
-      } else {
-        setError('An unexpected error occurred')
-      }
+    } catch (error: unknown) {
+      console.error('Error submitting content:', error)
+      const apiError = error as ApiError
+      setError(apiError.message || 'An error occurred')
     } finally {
       setIsSubmitting(false)
     }
@@ -119,7 +127,7 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
                   required
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value as ContentType })}
                   disabled={isSubmitting}
                 >
                   <option value="Article">Article</option>
@@ -137,7 +145,7 @@ export function ContentDialog({ content, isOpen, onClose, onSuccess }: ContentDi
                   required
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as ContentStatus })}
                   disabled={isSubmitting}
                 >
                   <option value="Draft">Draft</option>

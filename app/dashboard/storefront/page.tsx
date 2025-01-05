@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import {
-  Package,
   Edit,
   Trash2,
   Plus,

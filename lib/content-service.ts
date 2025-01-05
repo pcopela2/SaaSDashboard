@@ -10,11 +10,14 @@ export interface Content {
   updated_at: string
 }
 
+export type ContentType = 'Article' | 'Page' | 'Email'
+export type ContentStatus = 'Draft' | 'Published'
+
 export interface CreateContentInput {
   title: string
-  type: 'Article' | 'Page' | 'Email'
-  status: 'Draft' | 'Published'
-  content?: string
+  type: ContentType
+  status: ContentStatus
+  content: string
 }
 
 export interface UpdateContentInput extends Partial<CreateContentInput> {
