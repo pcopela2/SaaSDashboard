@@ -6,9 +6,6 @@ import {
   Lock,
   Bell,
   CreditCard,
-  Globe,
-  Mail,
-  Shield,
   Zap,
   Users,
 } from 'lucide-react'

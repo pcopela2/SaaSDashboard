@@ -2,12 +2,10 @@
 
 import { useState } from 'react'
 import {
-  BarChart,
   Mail,
   MessageSquare,
   Share2,
   Calendar,
-  Clock,
   Users,
   Zap,
 } from 'lucide-react'
