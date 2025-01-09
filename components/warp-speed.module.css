@@ -1,0 +1,109 @@
+.scene {
+  transform: translate3d(-50%, -50%, 1000px);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+}
+
+.wrapper {
+  position: relative;
+  transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+}
+
+.warp {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  perspective: calc(var(--perspective, 100) * 1px);
+  transform-style: preserve-3d;
+  background: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.warp * {
+  pointer-events: none;
+}
+
+.warp__side {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  position: absolute;
+  container-type: inline-size;
+  background:
+    /* Horizontal lines */
+    linear-gradient(
+      rgba(255, 255, 255, 0.15) 1px,
+      transparent 1px
+    ) 0 0 / var(--grid-size, 5%) var(--grid-size, 5%),
+    /* Vertical lines */
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.15) 1px,
+      transparent 1px
+    ) 0 0 / var(--grid-size, 5%) var(--grid-size, 5%);
+}
+
+.warp__side--top {
+  width: 100cqi;
+  height: 100cqmax;
+  transform-origin: 50% 0%;
+  transform: rotateX(-90deg);
+}
+
+.warp__side--bottom {
+  width: 100cqi;
+  height: 100cqmax;
+  top: 100%;
+  transform-origin: 50% 0%;
+  transform: rotateX(-90deg);
+}
+
+.warp__side--left {
+  width: 100cqh;
+  height: 100cqmax;
+  top: 0;
+  left: 0;
+  transform-origin: 0% 0%;
+  transform: rotate(90deg) rotateX(-90deg);
+}
+
+.warp__side--right {
+  width: 100cqh;
+  height: 100cqmax;
+  top: 0;
+  right: 0;
+  transform-origin: 100% 0%;
+  transform: rotate(-90deg) rotateX(-90deg);
+}
+
+.beam {
+  width: var(--grid-size, 5%);
+  position: absolute;
+  top: 0;
+  left: calc(var(--x, 0) * var(--grid-size, 5%));
+  aspect-ratio: 1 / var(--ar, 1);
+  background: linear-gradient(hsl(var(--hue) 80% 60%), transparent);
+  translate: 0 calc((var(--speed) / var(--delay)) * 1cqh);
+  animation-name: warp;
+  animation-duration: calc((var(--speed, 0) * var(--reduced, 0)) * 1s);
+  animation-delay: calc((var(--delay, 0) * var(--reduced, 1)) * -1s);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  opacity: 0.6;
+}
+
+@keyframes warp {
+  0% { translate: -50% 100cqmax; }
+  100% { translate: -50% -100%; }
+}
+
+/* Add the rest of your CSS styles here, converting them to CSS module format */ 
