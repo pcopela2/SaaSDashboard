@@ -5,7 +5,7 @@ import Image from 'next/image'
 import styles from './bio-content.module.css'
 
 export function BioContent() {
-  const articleRefs = useRef<(HTMLDivElement | null)[]>([])
+  const articleRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,11 +28,16 @@ export function BioContent() {
     return () => observer.disconnect()
   }, [])
 
+  // Function to set refs properly
+  const setRef = (index: number) => (el: HTMLDivElement | null) => {
+    articleRefs.current[index] = el
+  }
+
   return (
     <main className={styles.main}>
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[0] = el}
+        ref={setRef(0)}
       >
         <div className={styles.fixed}>
           <Image 
@@ -51,7 +56,7 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[1] = el}
+        ref={setRef(1)}
       >
         <div className={styles.fixed}>
           <Image 
@@ -74,7 +79,7 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[2] = el}
+        ref={setRef(2)}
       >
         <div className={styles.fixed}>
           <Image 
