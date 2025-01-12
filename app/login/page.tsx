@@ -16,9 +16,12 @@ export default function LoginPage() {
     <div className="w-full">
       {/* Main login section */}
       <section className="relative h-screen">
-        <div className="absolute inset-0">
+        {/* Fixed warp speed background */}
+        <div className="fixed top-0 left-0 w-full h-screen bg-black">
           <WarpSpeed />
         </div>
+
+        {/* Login content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center">
           <div className="w-[400px] bg-white/95 backdrop-blur-sm rounded-lg border border-white/20 shadow-2xl p-8">
             <LoginForm />
@@ -45,7 +48,7 @@ export default function LoginPage() {
       </section>
 
       {/* Bio Content Section */}
-      <section className="bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative bg-black">
         <BioContent />
       </section>
     </div>

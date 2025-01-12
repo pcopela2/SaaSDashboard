@@ -1,11 +1,19 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './bio-content.module.css'
+import { RecruiterContact } from '@/components/overlays/recruiter-contact'
 
 export function BioContent() {
-  const articleRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [showContactForm, setShowContactForm] = useState(false)
+
+  // Function to set refs properly
+  const setRef = (index: number) => (el: HTMLDivElement | null) => {
+    articleRefs.current[index] = el
+  }
+
+  const articleRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,7 +40,7 @@ export function BioContent() {
     <main className={styles.main}>
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[0] = el}
+        ref={setRef(0)}
       >
         <div className={styles.fixed}>
           <Image 
@@ -50,7 +58,7 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[1] = el}
+        ref={setRef(1)}
       >
         <div className={styles.fixed}>
           <Image 
@@ -72,7 +80,7 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={el => articleRefs.current[2] = el}
+        ref={setRef(2)}
       >
         <div className={styles.fixed}>
           <Image 
@@ -85,16 +93,39 @@ export function BioContent() {
             <h2 className={styles.heading}>Professional Journey</h2>
             <div className={styles.chatContainer}>
               <div className={styles.textBlocks}>
-                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>Senior Data Solutions Architect</p>
-                <p className={`${styles.textBlock} ${styles.textBlockEven}`}>Cloud Architecture Expert</p>
-                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>Full Stack Developer</p>
-                <p className={`${styles.textBlock} ${styles.textBlockEven}`}>Microsoft Certified Professional</p>
-                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>Continuous Learner</p>
+                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>
+                  <span className="text-white">Senior Data Solutions Architect</span>
+                </p>
+                <p className={`${styles.textBlock} ${styles.textBlockEven}`}>
+                  Cloud Architecture Expert
+                </p>
+                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>
+                  <span className="text-white">Full Stack Developer</span>
+                </p>
+                <p className={`${styles.textBlock} ${styles.textBlockEven}`}>
+                  Microsoft Certified Professional
+                </p>
+                <p className={`${styles.textBlock} ${styles.textBlockOdd}`}>
+                  <span className="text-white">Continuous Learner</span>
+                </p>
+                <p className={`${styles.textBlock} ${styles.textBlockEven}`}>
+                  <button
+                    onClick={() => setShowContactForm(true)}
+                    className={styles.recruiterButton}
+                  >
+                    Contact Me About Opportunities
+                  </button>
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <RecruiterContact
+        isOpen={showContactForm}
+        onClose={() => setShowContactForm(false)}
+      />
     </main>
   )
 } 

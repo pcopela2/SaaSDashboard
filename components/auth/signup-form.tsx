@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -13,16 +12,8 @@ export function SignUpForm() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      })
-      if (error) throw error
-      router.push('/dashboard')
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
-    }
+    // For demo purposes, just redirect
+    router.push('/dashboard')
   }
 
   return (
