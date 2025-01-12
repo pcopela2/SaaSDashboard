@@ -1,5 +1,9 @@
-import { redirect } from 'next/navigation'
+import { WarpSpeed } from '@/components/warp-speed'
 
-export default function RootPage() {
-  redirect('/dashboard')
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-black">
+      <WarpSpeed />
+    </div>
+  )
 }

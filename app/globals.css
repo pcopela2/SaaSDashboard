@@ -57,3 +57,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "Geist Sans";
+  src: url("https://assets.codepen.io/605876/GeistVF.ttf") format("truetype");
+}
+
+:root {
+  --accent: hsl(0 0% 0%);
+  --perspective: 1000;
+  --grid-size: 5%;
+  --line-width: 1px;
+  --bg: hsl(0 0% 90%);
+  --line: hsl(0 0% 0% / 0.15);
+  --color: hsl(0 0% 4%);
+  --text: hsl(0 0% 15%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color: hsl(0 0% 94%);
+    --accent: hsl(0 0% 2%);
+    --bg: hsl(0 0% 4%);
+    --line: hsl(0 0% 100% / 0.15);
+    --text: hsl(0 0% 90%);
+  }
+}
