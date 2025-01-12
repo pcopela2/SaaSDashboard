@@ -36,9 +36,10 @@ export function BioContent() {
       >
         <div className={styles.fixed}>
           <Image 
-            src="https://picsum.photos/id/135/1920/1080"
+            src="https://picsum.photos/seed/beach/1920/1080"
             alt="Outer Banks Sunset"
             fill
+            unoptimized
             className={styles.backgroundImage}
           />
           <div className={styles.content}>
@@ -54,9 +55,10 @@ export function BioContent() {
       >
         <div className={styles.fixed}>
           <Image 
-            src="https://picsum.photos/id/1033/1920/1080"
+            src="https://picsum.photos/seed/wedding/1920/1080"
             alt="Wedding Photo"
             fill
+            unoptimized
             className={styles.backgroundImage}
           />
           <div className={styles.content}>
@@ -76,9 +78,10 @@ export function BioContent() {
       >
         <div className={styles.fixed}>
           <Image 
-            src="https://picsum.photos/id/2/1920/1080"
+            src="https://picsum.photos/seed/code/1920/1080"
             alt="Programming"
             fill
+            unoptimized
             className={styles.backgroundImage}
           />
           <div className={styles.content}>
