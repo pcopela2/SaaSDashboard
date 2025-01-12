@@ -3,10 +3,34 @@
 import { useEffect } from 'react'
 import styles from './warp-speed.module.css'
 
+interface WarpConfig {
+  perspective: boolean
+  reduced: number
+  rx: number
+  ry: number
+  bn: number
+  hl: number
+  hu: number
+  sl: number
+  su: number
+  dl: number
+  du: number
+  cell: number
+  depth: number
+}
+
+interface Beam {
+  hue: number
+  x: number
+  speed: number
+  delay: number
+  ar?: number
+}
+
 export function WarpSpeed() {
   useEffect(() => {
     const sides = ['top', 'right', 'bottom', 'left']
-    const config = {
+    const config: WarpConfig = {
       perspective: false,
       reduced: 1,
       rx: -24,
@@ -22,10 +46,10 @@ export function WarpSpeed() {
       depth: 100,
     }
 
-    const generateExtraBeams = (container: Element, config: any) => {
+    const generateExtraBeams = (container: Element, config: WarpConfig) => {
       const extraBeams = Math.floor(Math.random() * 3) + 3;
       new Array(extraBeams).fill({}).forEach(() => {
-        const beam = {
+        const beam: Beam = {
           hue: Math.floor(Math.random() * (config.hu - config.hl)) + config.hl,
           x: Math.floor(Math.random() * 8),
           speed: Math.random() * (config.su - config.sl) + config.sl,
@@ -55,7 +79,7 @@ export function WarpSpeed() {
         const number = Math.floor(Math.random() * config.bn) + 1
         
         new Array(number).fill({}).forEach(() => {
-          const beam = {
+          const beam: Beam = {
             hue: Math.floor(Math.random() * (config.hu - config.hl)) + config.hl,
             x: Math.floor(Math.random() * 20),
             speed: Math.random() * (config.su - config.sl) + config.sl,
