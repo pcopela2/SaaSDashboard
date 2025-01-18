@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { useToast } from '@/components/ui/use-toast'
 import { RECAPTCHA_SITE_KEY } from '@/lib/recaptcha'
 
 interface RecruiterContactProps {
@@ -20,6 +21,7 @@ export function RecruiterContact({ isOpen, onClose }: RecruiterContactProps) {
   const [message, setMessage] = useState('')
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setter: (value: string) => void) => {
     setter(e.target.value)
@@ -120,11 +122,17 @@ export function RecruiterContact({ isOpen, onClose }: RecruiterContactProps) {
             />
           </div>
           <div className="flex justify-center my-4">
-            <ReCAPTCHA
-              sitekey={RECAPTCHA_SITE_KEY}
-              onChange={(token) => setCaptchaToken(token)}
-              theme="dark"
-            />
+            {RECAPTCHA_SITE_KEY ? (
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                theme="dark"
+              />
+            ) : (
+              <div className="text-red-400 text-sm">
+                reCAPTCHA not configured
+              </div>
+            )}
           </div>
           <div className="flex justify-end space-x-2">
             <Button

@@ -1,5 +1,5 @@
-export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfUlrUqAAAAACQoDHFUe5obu8EBukOjfvhX6MoK'
+export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
 if (!RECAPTCHA_SITE_KEY) {
-  throw new Error('Missing RECAPTCHA_SITE_KEY environment variable')
+  console.warn('Missing RECAPTCHA_SITE_KEY environment variable')
 } 
