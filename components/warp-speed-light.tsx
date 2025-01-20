@@ -3,10 +3,26 @@
 import { useEffect } from 'react'
 import styles from './warp-speed-light.module.css'
 
+interface WarpSpeedLightConfig {
+  perspective: boolean
+  reduced: number
+  rx: number
+  ry: number
+  bn: number
+  hl: number
+  hu: number
+  sl: number
+  su: number
+  dl: number
+  du: number
+  cell: number
+  depth: number
+}
+
 export function WarpSpeedLight() {
   useEffect(() => {
     const sides = ['top', 'right', 'bottom', 'left']
-    const config = {
+    const config: WarpSpeedLightConfig = {
       perspective: false,
       reduced: 1,
       rx: -24,
@@ -22,7 +38,7 @@ export function WarpSpeedLight() {
       depth: 100,
     }
 
-    const generateExtraBeams = (container: Element, config: any) => {
+    const generateExtraBeams = (container: Element, config: WarpSpeedLightConfig) => {
       const extraBeams = Math.floor(Math.random() * 3) + 3;
       new Array(extraBeams).fill({}).forEach(() => {
         const beam = {

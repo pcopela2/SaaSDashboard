@@ -7,7 +7,20 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, email, subject, message, captchaToken } = body
 
-    // Verify reCAPTCHA token here if needed
+    // Verify reCAPTCHA token
+    const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`,
+    })
+
+    const recaptchaData = await recaptchaResponse.json()
+    if (!recaptchaData.success) {
+      return NextResponse.json(
+        { error: 'Invalid captcha' },
+        { status: 400 }
+      )
+    }
 
     const supabase = createRouteHandlerClient({ cookies })
 

@@ -52,14 +52,16 @@ export function RecruiterContact({ isOpen, onClose }: RecruiterContactProps) {
         }),
       })
 
-      if (!response.ok) throw new Error('Failed to submit')
+      if (!response.ok) {
+        throw new Error('Failed to submit')
+      }
 
       toast({
         title: 'Success',
         description: 'Your message has been sent successfully!',
       })
       onClose()
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to send message. Please try again.',

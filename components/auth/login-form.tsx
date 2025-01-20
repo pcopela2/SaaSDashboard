@@ -15,17 +15,17 @@ export function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-
-      if (error) throw error
-
+      if (signInError) {
+        setError('Invalid login credentials')
+        return
+      }
       router.push('/dashboard')
-      router.refresh()
-    } catch (error) {
-      setError('Invalid login credentials')
+    } catch {
+      setError('An unexpected error occurred')
     }
   }
 

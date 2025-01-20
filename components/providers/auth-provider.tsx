@@ -3,17 +3,24 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
+import type { User, AuthError } from '@supabase/supabase-js'
 
 interface AuthContextType {
-  user: any
-  signIn: (email: string, password: string) => Promise<any>
+  user: User | null
+  signIn: (email: string, password: string) => Promise<{ user: User | null; error: AuthError | null }>
   signOut: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType)
+const defaultAuth: AuthContextType = {
+  user: null,
+  signIn: async () => ({ user: null, error: null }),
+  signOut: async () => {}
+}
+
+const AuthContext = createContext<AuthContextType>(defaultAuth)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
@@ -35,8 +42,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
     })
-    if (error) throw error
-    return data
+    return {
+      user: data?.user ?? null,
+      error: error
+    }
   }
 
   const signOut = async () => {

@@ -2,8 +2,18 @@
 
 import { createContext } from 'react'
 
-interface ToastContextType {
-  toast: (props: { title: string; description: string; variant?: 'default' | 'destructive' }) => void
+interface ToastProps {
+  title: string
+  description: string
+  variant?: 'default' | 'destructive'
 }
 
-export const ToastContext = createContext<ToastContextType | undefined>(undefined) 
+interface ToastContextType {
+  toast: (props: ToastProps) => void
+}
+
+const defaultToast: ToastContextType = {
+  toast: () => undefined
+}
+
+export const ToastContext = createContext<ToastContextType>(defaultToast) 

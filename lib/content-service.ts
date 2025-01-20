@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export interface Content {
   id: string
@@ -26,51 +26,74 @@ export interface UpdateContentInput extends Partial<CreateContentInput> {
 
 export const contentService = {
   async listContents(): Promise<Content[]> {
-    const { data, error } = await supabase
-      .from('content')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const supabase = createClientComponentClient()
+    
+    try {
+      const { data, error } = await supabase
+        .from('content')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('Error listing contents:', error)
-      throw new Error(error.message)
+      if (error) {
+        console.error('Error listing contents:', error)
+        throw new Error(error.message)
+      }
+      return data
+    } catch (err) {
+      console.error('Error in listContents:', err)
+      throw new Error('Failed to list contents')
     }
-    return data
   },
 
   async getContent(id: string): Promise<Content> {
-    const { data, error } = await supabase
-      .from('content')
-      .select('*')
-      .eq('id', id)
-      .single()
+    const supabase = createClientComponentClient()
+    
+    try {
+      const { data, error } = await supabase
+        .from('content')
+        .select('*')
+        .eq('id', id)
+        .single()
 
-    if (error) {
-      console.error('Error getting content:', error)
-      throw new Error(error.message)
+      if (error) {
+        console.error('Error getting content:', error)
+        throw new Error(error.message)
+      }
+      return data
+    } catch (err) {
+      console.error('Error in getContent:', err)
+      throw new Error('Failed to get content')
     }
-    return data
   },
 
   async createContent(input: CreateContentInput): Promise<Content> {
-    console.log('Creating content with input:', input)
-    const { data, error } = await supabase
-      .from('content')
-      .insert([input])
-      .select()
-      .single()
+    const supabase = createClientComponentClient()
+    
+    try {
+      console.log('Creating content with input:', input)
+      const { data, error } = await supabase
+        .from('content')
+        .insert([input])
+        .select()
+        .single()
 
-    if (error) {
-      console.error('Error creating content:', error)
-      throw new Error(error.message)
+      if (error) {
+        console.error('Error creating content:', error)
+        throw new Error(error.message)
+      }
+      if (!data) {
+        throw new Error('No data returned from create operation')
+      }
+      return data
+    } catch (err) {
+      console.error('Error in createContent:', err)
+      throw new Error('Failed to create content')
     }
-    if (!data) {
-      throw new Error('No data returned from create operation')
-    }
-    return data
   },
 
   async updateContent({ id, ...input }: UpdateContentInput): Promise<Content> {
+    const supabase = createClientComponentClient()
+    
     console.log('Updating content with input:', { id, ...input })
     const { data, error } = await supabase
       .from('content')
@@ -90,6 +113,8 @@ export const contentService = {
   },
 
   async deleteContent(id: string): Promise<void> {
+    const supabase = createClientComponentClient()
+    
     console.log('Deleting content with id:', id)
     const { error } = await supabase
       .from('content')

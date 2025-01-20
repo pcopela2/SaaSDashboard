@@ -3,17 +3,30 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export function SignUpForm() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const supabase = createClientComponentClient()
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // For demo purposes, just redirect
-    router.push('/dashboard')
+    try {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+      if (signUpError) {
+        setErrorMessage(signUpError.message)
+        return
+      }
+      router.push('/dashboard')
+    } catch {
+      setErrorMessage('An unexpected error occurred')
+    }
   }
 
   return (
@@ -21,10 +34,10 @@ export function SignUpForm() {
       <h2 className="text-2xl font-bold text-center mb-8">
         Create your account
       </h2>
-      <form className="space-y-6" onSubmit={handleSignUp}>
-        {error && (
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        {errorMessage && (
           <div className="rounded-md bg-red-50 border border-red-200 p-4">
-            <div className="text-sm text-red-600">{error}</div>
+            <div className="text-sm text-red-600">{errorMessage}</div>
           </div>
         )}
         
