@@ -1,9 +1,5 @@
-import { WarpSpeed } from '@/components/warp-speed'
+import { redirect } from 'next/navigation'
 
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-black">
-      <WarpSpeed />
-    </div>
-  )
+  redirect('/login')
 }

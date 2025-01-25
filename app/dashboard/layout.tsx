@@ -18,7 +18,7 @@ import {
   LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/providers/auth-provider'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -42,23 +42,23 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { signOut, isLoading } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true)
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      
-      // Refresh and redirect to login
-      router.refresh()
-      router.push('/login')
+      await signOut()
     } catch (error) {
       console.error('Error logging out:', error)
     } finally {
       setIsLoggingOut(false)
     }
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (

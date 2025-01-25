@@ -1,12 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '@/components/providers/auth-provider'
 
 export function LoginForm() {
-  const router = useRouter()
+  const { signIn } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -18,21 +17,9 @@ export function LoginForm() {
       setLoading(true)
       setError(null)
       
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
+      const { error: signInError } = await signIn(email, password)
       if (signInError) throw signInError
-
-      if (data?.session) {
-        // Refresh the page to update the cookie
-        router.refresh()
-        // Navigate to dashboard
-        router.push('/dashboard')
-      } else {
-        throw new Error('No session created')
-      }
+      
     } catch (error) {
       console.error('Login error:', error)
       setError(error instanceof Error ? error.message : 'An error occurred during login')
@@ -82,6 +69,7 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
           </div>
@@ -89,9 +77,10 @@ export function LoginForm() {
 
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={loading}
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
         >
-          Sign in
+          {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
 
