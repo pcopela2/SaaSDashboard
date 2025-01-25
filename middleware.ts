@@ -12,6 +12,10 @@ export async function middleware(req: NextRequest) {
 
   // Allow public access to login and signup pages
   if (['/login', '/signup'].includes(req.nextUrl.pathname)) {
+    if (session) {
+      // If user is signed in, redirect to dashboard
+      return NextResponse.redirect(new URL('/dashboard', req.url))
+    }
     return res
   }
 
