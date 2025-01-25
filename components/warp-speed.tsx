@@ -41,7 +41,7 @@ export function WarpSpeed() {
     const generateExtraBeams = (container: Element, config: WarpSpeedConfig) => {
       const extraBeams = Math.floor(Math.random() * 3) + 3;
       new Array(extraBeams).fill({}).forEach(() => {
-        const beam = {
+        const beam: Beam = {
           hue: Math.floor(Math.random() * (config.hu - config.hl)) + config.hl,
           x: Math.floor(Math.random() * 8),
           speed: Math.random() * (config.su - config.sl) + config.sl,
@@ -71,7 +71,7 @@ export function WarpSpeed() {
         const number = Math.floor(Math.random() * config.bn) + 1
         
         new Array(number).fill({}).forEach(() => {
-          const beam = {
+          const beam: Beam = {
             hue: Math.floor(Math.random() * (config.hu - config.hl)) + config.hl,
             x: Math.floor(Math.random() * 20),
             speed: Math.random() * (config.su - config.sl) + config.sl,
