@@ -12,20 +12,38 @@ out/
 build
 dist
 
-# Environment files
+# Environment files - keep these private!
 .env
 .env.local
-.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Keep example env file for reference
+!.env.example
 
 # Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 # Misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # IDE
 .idea
-.vscode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
