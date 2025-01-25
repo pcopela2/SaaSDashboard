@@ -53,7 +53,7 @@ export default function DashboardPage() {
       {/* Welcome section */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome to your dashboard
+          Welcome to your dashboard!
         </h1>
         <p className="mt-1 text-sm text-gray-500">
           Let&apos;s get you started with the basics
