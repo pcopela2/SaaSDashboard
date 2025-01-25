@@ -7,13 +7,12 @@ import { RecruiterContact } from '@/components/overlays/recruiter-contact'
 
 export function BioContent() {
   const [showContactForm, setShowContactForm] = useState(false)
+  const articleRefs = useRef<Array<HTMLDivElement | null>>([])
 
   // Function to set refs properly
   const setRef = (index: number) => (el: HTMLDivElement | null) => {
     articleRefs.current[index] = el
   }
-
-  const articleRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,16 +35,10 @@ export function BioContent() {
     return () => observer.disconnect()
   }, [])
 
-  // Function to set refs properly
-  const setRef = (index: number) => (el: HTMLDivElement | null) => {
-    articleRefs.current[index] = el
-  }
-
   return (
     <main className={styles.main}>
       <div 
         className={styles.article}
-        ref={setRef(0)}
         ref={setRef(0)}
       >
         <div className={styles.fixed}>
@@ -65,7 +58,6 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={setRef(1)}
         ref={setRef(1)}
       >
         <div className={styles.fixed}>
@@ -89,7 +81,6 @@ export function BioContent() {
 
       <div 
         className={styles.article}
-        ref={setRef(2)}
         ref={setRef(2)}
       >
         <div className={styles.fixed}>

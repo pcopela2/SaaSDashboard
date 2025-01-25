@@ -19,6 +19,14 @@ interface WarpSpeedConfig {
   depth: number
 }
 
+interface Beam {
+  hue: number
+  x: number
+  speed: number
+  delay: number
+  ar?: number
+}
+
 export function WarpSpeed() {
   useEffect(() => {
     const sides = ['top', 'right', 'bottom', 'left']
