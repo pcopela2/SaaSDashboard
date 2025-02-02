@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import type { User, AuthError } from '@supabase/supabase-js'
 
 interface AuthContextType {
@@ -12,27 +12,22 @@ interface AuthContextType {
   isLoading: boolean
 }
 
-const defaultAuth: AuthContextType = {
-  user: null,
-  signIn: async () => ({ user: null, error: null }),
-  signOut: async () => {},
-  isLoading: true
-}
-
-const AuthContext = createContext<AuthContextType>(defaultAuth)
+const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [authInitialized, setAuthInitialized] = useState(false)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
-  // Initialize auth state
+  // Initialize auth state once
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         setUser(session?.user ?? null)
+        setAuthInitialized(true)
       } catch (error) {
         console.error('Error initializing auth:', error)
       } finally {
@@ -40,28 +35,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    initializeAuth()
+    if (!authInitialized) {
+      initializeAuth()
+    }
+  }, [supabase.auth, authInitialized])
+
+  // Set up auth state change listener
+  useEffect(() => {
+    if (!authInitialized) return
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null)
-      
-      if (event === 'SIGNED_IN') {
-        router.refresh()
-        router.push('/dashboard')
-      } else if (event === 'SIGNED_OUT') {
-        router.refresh()
-        router.push('/login')
-      }
     })
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase, router])
+  }, [supabase.auth, authInitialized])
 
-  const signIn = async (email: string, password: string) => {
+  // Debounced navigation
+  const debouncedNavigate = useCallback((path: string) => {
+    const timeoutId = setTimeout(() => {
+      router.refresh()
+      router.push(path)
+    }, 100)
+    return () => clearTimeout(timeoutId)
+  }, [router])
+
+  const signIn = useCallback(async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -70,33 +73,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error
       
+      if (data.user) {
+        debouncedNavigate('/dashboard')
+      }
+      
       return { user: data?.user ?? null, error: null }
     } catch (error) {
       console.error('Sign in error:', error)
       return { user: null, error: error as AuthError }
     }
-  }
+  }, [supabase.auth, debouncedNavigate])
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       
-      // Clear local auth state
       setUser(null)
-      
-      // Force a router refresh and redirect
-      router.refresh()
-      router.push('/login')
+      debouncedNavigate('/login')
     } catch (error) {
       console.error('Error signing out:', error)
       throw error
     }
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  }, [supabase.auth, debouncedNavigate])
 
   return (
     <AuthContext.Provider value={{ user, signIn, signOut, isLoading }}>

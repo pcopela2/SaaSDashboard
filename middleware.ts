@@ -2,35 +2,46 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const PUBLIC_ROUTES = ['/login', '/signup']
+const PROTECTED_ROUTES = ['/dashboard']
+
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
   try {
+    // Get session only when needed
+    const pathname = req.nextUrl.pathname
+    const needsSession = PROTECTED_ROUTES.some(route => pathname.startsWith(route)) || 
+                        PUBLIC_ROUTES.includes(pathname)
+
+    if (!needsSession) {
+      return res
+    }
+
     const {
       data: { session },
     } = await supabase.auth.getSession()
 
-    // Redirect root to login if not authenticated
-    if (req.nextUrl.pathname === '/') {
-      if (session) {
-        return NextResponse.redirect(new URL('/dashboard', req.url))
-      }
-      return NextResponse.redirect(new URL('/login', req.url))
+    // Handle root path
+    if (pathname === '/') {
+      return NextResponse.redirect(new URL(session ? '/dashboard' : '/login', req.url))
     }
 
-    // Allow public access to login and signup pages
-    if (['/login', '/signup'].includes(req.nextUrl.pathname)) {
+    // Handle public routes
+    if (PUBLIC_ROUTES.includes(pathname)) {
       if (session) {
-        // If user is signed in, redirect to dashboard
         return NextResponse.redirect(new URL('/dashboard', req.url))
       }
       return res
     }
 
-    // Protect dashboard routes
-    if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
-      return NextResponse.redirect(new URL('/login', req.url))
+    // Handle protected routes
+    if (PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
+      if (!session) {
+        return NextResponse.redirect(new URL('/login', req.url))
+      }
+      return res
     }
 
     return res
