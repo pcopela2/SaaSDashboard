@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   LogOut,
+  Image,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -28,6 +29,7 @@ const navigation = [
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart2 },
   { name: 'Sales', href: '/dashboard/sales', icon: ShoppingCart },
   { name: 'Storefront', href: '/dashboard/storefront', icon: Store },
+  { name: 'Instagram', href: '/dashboard/instagram', icon: Image },
 ]
 
 const secondaryNavigation = [

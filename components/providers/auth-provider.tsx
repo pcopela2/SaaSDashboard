@@ -46,14 +46,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email)
       setUser(session?.user ?? null)
     })
 
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [supabase.auth, authInitialized])
+    return () => subscription.unsubscribe()
+  }, [])
 
   // Debounced navigation
   const debouncedNavigate = useCallback((path: string) => {
